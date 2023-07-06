@@ -12,9 +12,18 @@ const user = {
   edits: 0,
 };
 
+let hello = 0;
+
 export const handlers = [
   graphql.query("GetUser", (_, res, ctx) => {
     return res(ctx.delay(2000), ctx.data({ user }));
+  }),
+  graphql.query("Hello", (_, res, ctx) => {
+    hello += 1;
+    return res(
+      ctx.delay(2000),
+      ctx.data({ hello: { value: `Hello ${hello}` } })
+    );
   }),
 
   graphql.mutation("EditPost", (req, res, ctx) => {

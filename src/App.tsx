@@ -21,6 +21,24 @@ const EDIT_POST = gql`
   }
 `;
 
+const HELLO = gql`
+  query Hello {
+    hello {
+      value
+    }
+  }
+`;
+
+const Hello = () => {
+  const { loading, data } = useQuery<{ hello: { value: string } }>(HELLO);
+
+  if (loading || !data) {
+    return <div>Loading..</div>;
+  }
+
+  return <div>{data.hello.value}</div>;
+};
+
 const Post = ({ id, text }: { id: number; text: string }) => {
   const [mutate, { loading }] = useMutation(EDIT_POST, {
     variables: {
@@ -28,6 +46,7 @@ const Post = ({ id, text }: { id: number; text: string }) => {
       text: text.toUpperCase(),
     },
     refetchQueries: [GET_USER],
+    // refetchQueries: [HELLO],
   });
   return (
     <div>
@@ -55,9 +74,12 @@ function App() {
           <Post id={post.id} text={post.text} key={post.id} />
         ))}
       </div>
-
       <br />
+
       <div>Edited {data.user.edits} times.</div>
+      <br />
+
+      <Hello />
     </div>
   );
 }
